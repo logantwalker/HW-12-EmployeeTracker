@@ -1,0 +1,24 @@
+{
+  "name": "hw-12-employeetracker",
+  "version": "1.0.0",
+  "description": "Content Management System for managing a company's employees using node, inquirer, and MySQL.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit ",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/logantwalker/HW-12-EmployeeTracker.git"
+  },
+  "keywords": [
+    "npm",
+    "install"
+  ],
+  "author": "Logan Walker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/logantwalker/HW-12-EmployeeTracker/issues"
+  },
+  "homepage": "https://github.com/logantwalker/HW-12-EmployeeTracker#readme"
+}
