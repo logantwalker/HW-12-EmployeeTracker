@@ -19,7 +19,7 @@ function startPromt(){
     .prompt([{
         type: 'list',
         message: 'What would you like to do?',
-        choices:['View All Employees','View All Departments','View All Roles','Quit'],
+        choices:['View All Employees','View Employees by Department','View All Departments','View All Roles','Quit'],
         name: 'action'
     }])
     .then(function(res){
@@ -41,6 +41,10 @@ async function interpret(res){
       break;
     case 'View All Departments':
       await department.getDepartments(connection);
+      startPromt();
+      break;
+    case 'View Employees by Department':
+      await employees.employeesByDepartment(connection);
       startPromt();
       break;
     case 'Quit':
