@@ -18,7 +18,7 @@ function startPromt(){
   inquirer
     .prompt([{
         type: 'list',
-        message: '\nWhat would you like to do?',
+        message: 'What would you like to do?',
         choices:['View All Employees','View All Departments','View All Roles','Quit'],
         name: 'action'
     }])
@@ -29,21 +29,23 @@ function startPromt(){
     }).catch((error)=>{console.log(error)});
 };
 
-const interpret = (res) =>{
+async function interpret(res){
   switch(res){
     case 'View All Employees':
-      employees.getEmployee(connection);
+      await employees.getEmployee(connection);
+      startPromt();
       break;
     case 'View All Roles':
-      roles.getRoles(connection);
+      await roles.getRoles(connection);
+      startPromt();
       break;
     case 'View All Departments':
-      department.getDepartments(connection);
+      await department.getDepartments(connection);
+      startPromt();
       break;
     case 'Quit':
       connection.end()
       return
   }
-  startPromt()
-
+  
 }
