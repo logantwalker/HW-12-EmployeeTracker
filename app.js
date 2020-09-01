@@ -245,5 +245,6 @@ async function addEmployee(data){
   await employees.add(connection,data,role_id,manager_id);
   await employees.getEmployee(connection);
   populateRolesList();
+  populateEmployeeList();
   startPromt();
 }
