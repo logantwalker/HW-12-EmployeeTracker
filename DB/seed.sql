@@ -25,6 +25,12 @@ CREATE TABLE employees (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE heirarchy (
+	role_id INT NOT NULL,
+    manager_id INT,
+    PRIMARY KEY (role_id)
+);
+
 INSERT INTO departments
 VALUE 
     (default,'Executive'),
@@ -66,11 +72,11 @@ VALUE
 -- engineering dept
     (default,'Maxwell','Chen',5,3),
     (default,'Amba','Nava',6,5),
-    (default,'Mack','Bell',7,5),
-    (default,'Viaan','Carroll',7,5),
-    (default,'Mekhi','Costa',8,5),
-    (default,'Leighton','Gibbs',8,5),
-    (default,'Morwenna','Cline',8,5),
+    (default,'Mack','Bell',7,6),
+    (default,'Viaan','Carroll',7,6),
+    (default,'Mekhi','Costa',8,6),
+    (default,'Leighton','Gibbs',8,6),
+    (default,'Morwenna','Cline',8,6),
 
 -- human resource dept
     (default,'Meghan','Monroe',9,4),
@@ -83,3 +89,21 @@ VALUE
     (default,'Kelly','Bullock',13,12),
     (default,'Kobi','Pratt',14,12),
     (default,'Killian','Sanders',14,12);
+    
+INSERT INTO heirarchy
+VALUE
+	('1', NULL),
+	('2', '1'),
+	('3', '1'),
+	('4', '1'),
+	('5', '3'),
+	('6', '5'),
+	('7', '6'),
+	('8', '6'),
+	('9', '4'),
+	('10', '9'),
+	('11', '9'),
+	('12', '2'),
+	('13', '12'),
+	('14', '12');
+	

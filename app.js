@@ -14,12 +14,34 @@ connection.connect(function (err) {
   startPromt()
 });
 
+
+let RolesList = [];
+let DeptList = [];
+
+async function populateRolesList(){
+  RolesList = [];
+  let rawData = await roles._roleList(connection);
+  rawData.forEach(el =>{
+    RolesList.push(el.title);
+  })
+}
+populateRolesList();
+
+async function populateDeptList(){
+  DeptList = [];
+  let rawData = await department._deptList(connection);
+  rawData.forEach(el =>{
+    DeptList.push(el.name);
+  })
+}
+populateDeptList();
+
 function startPromt() {
   inquirer
     .prompt([{
       type: 'list',
       message: 'What would you like to do?',
-      choices: ['View All Employees', 'View Employees by Department', 'View Employees by Manager', 'Add New Employee', 'View All Roles', 'View All Departments', 'Quit'],
+      choices: ['View All Employees', 'View Employees by Department', 'View Employees by Manager', 'Add New Employee', 'View All Roles','Add New Role', 'View All Departments', 'Quit'],
       name: 'action'
     }])
     .then(function (res) {
@@ -54,11 +76,51 @@ async function interpret(res) {
     case 'Add New Employee':
       captureNewEmployee();
       break;
+    case 'Add New Role':
+      captureRoleInfo();
+      break;
     case 'Quit':
       connection.end()
       return
   }
 };
+
+function captureRoleInfo(){
+  inquirer
+    .prompt([{
+      type: 'input',
+      message: 'Enter Role Title:',
+      name: 'title'
+    },
+    {
+      type: 'number',
+      message: 'Please enter salary information:',
+      name: 'salary'
+    },
+    {
+      type: 'list',
+      message: 'What department does this role belong to?',
+      choices: DeptList,
+      name: 'department'
+    }
+  ])
+    .then(function (res) {
+      console.log(res);
+      addRole(res);
+    }).catch((error) => { console.log(error) });
+}
+
+async function addRole(data){
+  let department_id;
+  for(let i=0; i < DeptList.length; i++){
+    if(data.department === DeptList[i]){
+      department_id = i + 1;
+    }
+  }
+  await roles.add(connection,data,department_id);
+  await roles.getRoles(connection);
+  startPromt()
+}
 
 function captureNewEmployee(){
   inquirer
@@ -70,7 +132,7 @@ function captureNewEmployee(){
     {
       type: 'list',
       message: 'Please Choose Role:',
-      choices:['Engineer I','Engineer II','Lead Engineer','Engineering Director','Contracts Associate','Contracts Specialist','Contracting Director','Human Resource Officer','Recruiting Specialist','HR Director','Chief Operations Officer','Chief Technical Officer','Chief Financial Officer','Chief Executive Officer'],
+      choices: RolesList,
       name: 'role'
     },
   ])
@@ -80,6 +142,20 @@ function captureNewEmployee(){
 }
 
 async function addEmployee(data){
-  await employees.add(connection,data);
+  let role_id;
+  const determineDetails = () =>{
+    for(let i = 0; i<RolesList.length;i++){
+      if(data.role === RolesList[i]){
+        role_id = i + 1;
+      }
+    }
+  }
+  determineDetails();
+  console.log(role_id);
+  let manager_id = await employees._getManagerId(connection,role_id);
+  manager_id = manager_id[0].manager_id;
+  await employees.add(connection,data,role_id,manager_id);
+  await employees.getEmployee(connection);
+  populateRolesList();
   startPromt();
 }

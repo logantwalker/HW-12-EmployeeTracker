@@ -37,80 +37,23 @@ const employees = {
         });
     },
 
-    add: function(connection,data){
+    add: async function(connection,data,role_id,manager_id){
         return new Promise(resolve =>{
             let name = data.name.split(' ');
-            let first_name = name[0];
-            let last_name = name[1];
-            let role_id;
-            let manager_id;
-            const determineDetails = () =>{
-                switch(data.role){
-                    case 'Chief Executive Officer':
-                        role_id = 1;
-                        
-                        break;
-                    case 'Chief Financial Officer':
-                        role_id = 2;
-                        manager_id = 1;
-                        break;
-                    case 'Chief Technical Officer':
-                        role_id = 3;
-                        manager_id = 1;
-                        break;
-                    case 'Chief Operations Officer':
-                        role_id = 4;
-                        manager_id = 1;
-                        break;
-                    case 'Engineering Director':
-                        role_id = 5;
-                        manager_id = 3;
-                        break;
-                    case 'Lead Engineer':
-                        role_id = 6;
-                        manager_id = 5;
-                        break;
-                    case 'Engineer II':
-                        role_id = 7;
-                        manager_id=5;
-                        break;
-                    case 'Engineer I':
-                        role_id = 8;
-                        manager_id=5;
-                        break;
-                    case 'HR Director':
-                        role_id = 9;
-                        manager_id=4;
-                        break;
-                    case 'Recruiting Specialist':
-                        role_id = 10;
-                        manager_id=9;
-                        break;
-                    case 'Human Resource Officer':
-                        role_id = 11;
-                        manager_id=9;
-                        break;
-                    case 'Contracting Director':
-                        role_id = 12;
-                        manager_id=2;
-                        break;
-                    case 'Contracts Specialist':
-                        role_id = 13;
-                        manager_id=12;
-                        break;
-                    case 'Contracts Associate':
-                        role_id = 14;
-                        manager_id=12;
-                        break;
-                }
-            }
-            determineDetails();
-
             console.log("Creating New Employee...\n");
-            connection.query(`INSERT INTO employees VALUE (default,${first_name},${last_name},${role_id},${manager_id})`,
+            connection.query(`INSERT INTO employees VALUE (default,'${name[0]}','${name[1]}',${role_id},${manager_id})`,
              function(err, res) {
                 if (err) throw err;
-                console.table(res);
+                
+                resolve(res);
+            });
+        });
+    },
+
+    _getManagerId: function(connection,role_id){
+        return new Promise(resolve =>{
+            connection.query(`SELECT manager_id FROM heirarchy WHERE role_id = ${role_id}`, function(err, res) {
+                if (err) throw err;
                 resolve(res);
             });
         });
