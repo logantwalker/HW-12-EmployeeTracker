@@ -12,8 +12,8 @@ const department = {
 
     add: function(connection,data){
         return new Promise(resolve =>{
-            console.log("Selecting all departments...\n");
-            connection.query("SELECT * FROM departments", function(err, res) {
+            console.log("Creating new department...\n");
+            connection.query(`INSERT INTO departments VALUE (default,'${data.name}')`, function(err, res) {
                 if (err) throw err;
                 resolve(res);
             });

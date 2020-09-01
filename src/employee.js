@@ -49,10 +49,28 @@ const employees = {
             });
         });
     },
+    updateEmployee: function(connection,data,role_id,manager_id){
+        return new Promise(resolve =>{
+            let name = data.name.split(',');
+            connection.query(`UPDATE employees SET role_id = ${role_id}, manager_id = ${manager_id} WHERE last_name = '${name[0]}'`, function(err, res) {
+                if (err) throw err;
+                resolve(res);
+            });
+        });
+    },
 
     _getManagerId: function(connection,role_id){
         return new Promise(resolve =>{
             connection.query(`SELECT manager_id FROM heirarchy WHERE role_id = ${role_id}`, function(err, res) {
+                if (err) throw err;
+                resolve(res);
+            });
+        });
+    },
+
+    _listEmployees: function(connection){
+        return new Promise(resolve =>{
+            connection.query("SELECT concat(last_name,',',first_name) AS name FROM employees ORDER BY last_name", function(err, res) {
                 if (err) throw err;
                 resolve(res);
             });

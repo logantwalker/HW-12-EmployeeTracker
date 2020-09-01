@@ -28,6 +28,15 @@ const roles = {
                 resolve(res);
             });
         });
+    },
+    _updateHeirarchy: function(connection,role_id,manager_id){
+        return new Promise(resolve =>{
+            console.log("Creating new role...\n");
+            connection.query(`INSERT INTO heirarchy VALUE ('${role_id}',${manager_id})`, function(err, res) {
+                if (err) throw err;
+                resolve(res);
+            });
+        });
     }
 };
 
